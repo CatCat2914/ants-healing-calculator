@@ -2,21 +2,56 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Ant Cost Calculator V1.0</title>
+<title>Ant Cost Calculator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-    body { font-family: sans-serif; margin: 30px; }
-    .row { margin-bottom: 15px; }
-    label { display: inline-block; width: 180px; }
-    input[type=number] { width: 100px; }
-    .output span { display: block; font-weight: bold; margin: 2px 0; }
+    body { 
+        font-family: sans-serif; 
+        margin: 20px; 
+        font-size: 18px; 
+    }
+    h2 { font-size: 28px; margin-bottom: 20px; }
+    .row { margin-bottom: 25px; display: flex; flex-direction: column; }
+    label { margin-bottom: 8px; font-weight: bold; }
+    select, input[type=number], input[type=range] {
+        font-size: 18px;
+    }
+    input[type=number] {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        box-sizing: border-box;
+    }
+    input[type=range] {
+        width: 100%;
+        margin-top: 10px;
+        height: 30px; /* taller slider for touch */
+        -webkit-appearance: none;
+        background: #ddd;
+        border-radius: 10px;
+    }
+    input[type=range]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 30px;
+        height: 30px;
+        background: #555;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+    .output span {
+        display: block;
+        font-weight: bold;
+        font-size: 20px;
+        margin: 6px 0;
+    }
 </style>
 </head>
 <body>
 
-<h2>Ant Cost Calculator V1.0</h2>
+<h2>Ant Cost Calculator</h2>
 
 <div class="row">
-    <label>Ant Type:</label>
+    <label for="antType">Ant Type:</label>
     <select id="antType">
         <option>Guardian</option>
         <option>Shooter</option>
@@ -96,12 +131,9 @@ const entranceSlider = document.getElementById('entranceSlider');
 const entranceInput = document.getElementById('entranceInput');
 
 // ---------- Event listeners ----------
-
-// Quantity sync
 qtySlider.addEventListener('input', () => { qtyInput.value = qtySlider.value; update(); });
 qtyInput.addEventListener('input', () => { qtySlider.value = qtyInput.value; update(); });
 
-// Entrance sync
 entranceSlider.addEventListener('input', () => { entranceInput.value = entranceSlider.value; update(); });
 entranceInput.addEventListener('input', () => { 
     let val = Number(entranceInput.value);
@@ -112,7 +144,6 @@ entranceInput.addEventListener('input', () => {
     update(); 
 });
 
-// Ant type change
 document.getElementById('antType').addEventListener('change', update);
 
 // Initial update
