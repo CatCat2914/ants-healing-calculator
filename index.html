@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Ant Cost Calculator V1.0</title>
+<style>
+    body { font-family: sans-serif; margin: 30px; }
+    .row { margin-bottom: 15px; }
+    label { display: inline-block; width: 180px; }
+    input[type=number] { width: 100px; }
+    .output span { display: block; font-weight: bold; margin: 2px 0; }
+</style>
+</head>
+<body>
+
+<h2>Ant Cost Calculator V1.0</h2>
+
+<div class="row">
+    <label>Ant Type:</label>
+    <select id="antType">
+        <option>Guardian</option>
+        <option>Shooter</option>
+        <option>Carrier</option>
+    </select>
+</div>
+
+<div class="row">
+    <label>Quantity:</label>
+    <input type="range" id="quantitySlider" min="1" max="1000000" value="1">
+    <input type="number" id="quantityInput" value="1" min="1">
+</div>
+
+<div class="row">
+    <label>Entrance Enhancement Level (%):</label>
+    <input type="range" id="entranceSlider" min="0" max="25" value="0">
+    <input type="number" id="entranceInput" value="0" min="0" max="25">
+</div>
+
+<h3>Cost:</h3>
+<div class="output">
+    <span>Meat: <span id="meat">0</span></span>
+    <span>Plant: <span id="plant">0</span></span>
+    <span>Soil: <span id="soil">0</span></span>
+    <span>Sand: <span id="sand">0</span></span>
+    <span>Honey: <span id="honey">0</span></span>
+    <span>Fungi: <span id="fungi">0</span></span>
+</div>
+
+<script>
+// ---------- Cost data ----------
+const costs = {
+    Guardian: {meat:52, plant:27, soil:21, sand:12, honey:15, fungi:10},
+    Shooter:  {meat:41, plant:26, soil:14, sand:16, honey:15, fungi:10},
+    Carrier:  {meat:31, plant:32, soil:11, sand:21, honey:15, fungi:10}
+};
+
+// ---------- Utility ----------
+function formatValue(value) {
+    if (value >= 1e9) return (value/1e9).toFixed(2) + 'G';
+    if (value >= 1e6) return (value/1e6).toFixed(2) + 'M';
+    if (value >= 1e3) return (value/1e3).toFixed(2) + 'k';
+    return value;
+}
+
+// ---------- Update function ----------
+function update() {
+    const antType = document.getElementById('antType').value;
+    const qty = Number(document.getElementById('quantityInput').value);
+    let entrance = Number(document.getElementById('entranceInput').value);
+    entrance = Math.max(0, Math.min(25, entrance)); // strictly capped
+
+    const reduction = entrance / 100;
+    const base = costs[antType];
+
+    const finalCost = {
+        meat: Math.round(base.meat * qty * (1 - reduction)),
+        plant: Math.round(base.plant * qty * (1 - reduction)),
+        soil: Math.round(base.soil * qty * (1 - reduction)),
+        sand: Math.round(base.sand * qty * (1 - reduction)),
+        honey: Math.round(base.honey * qty * (1 - reduction)),
+        fungi: base.fungi * qty
+    };
+
+    document.getElementById('meat').textContent = formatValue(finalCost.meat);
+    document.getElementById('plant').textContent = formatValue(finalCost.plant);
+    document.getElementById('soil').textContent = formatValue(finalCost.soil);
+    document.getElementById('sand').textContent = formatValue(finalCost.sand);
+    document.getElementById('honey').textContent = formatValue(finalCost.honey);
+    document.getElementById('fungi').textContent = formatValue(finalCost.fungi);
+}
+
+// ---------- DOM elements ----------
+const qtySlider = document.getElementById('quantitySlider');
+const qtyInput = document.getElementById('quantityInput');
+const entranceSlider = document.getElementById('entranceSlider');
+const entranceInput = document.getElementById('entranceInput');
+
+// ---------- Event listeners ----------
+
+// Quantity sync
+qtySlider.addEventListener('input', () => { qtyInput.value = qtySlider.value; update(); });
+qtyInput.addEventListener('input', () => { qtySlider.value = qtyInput.value; update(); });
+
+// Entrance sync
+entranceSlider.addEventListener('input', () => { entranceInput.value = entranceSlider.value; update(); });
+entranceInput.addEventListener('input', () => { 
+    let val = Number(entranceInput.value);
+    if (val < 0) val = 0; 
+    if (val > 25) val = 25;
+    entranceInput.value = val;
+    entranceSlider.value = val;
+    update(); 
+});
+
+// Ant type change
+document.getElementById('antType').addEventListener('change', update);
+
+// Initial update
+update();
+
+</script>
+</body>
+</html>
