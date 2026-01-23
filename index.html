@@ -84,9 +84,9 @@
 <script>
 // ---------- Cost data ----------
 const costs = {
-    Guardian: {meat:52, plant:27, soil:21, sand:12, honey:15, fungi:10},
-    Shooter:  {meat:41, plant:26, soil:14, sand:16, honey:15, fungi:10},
-    Carrier:  {meat:31, plant:32, soil:11, sand:21, honey:15, fungi:10}
+    Guardian: {meat:67.857, plant:39.6, soil:25.205, sand:16.81356, honey:10.2, fungi:20},
+    Shooter:  {meat:60.625, plant:39.6, soil:20.4, sand:24, honey:10.2, fungi:20},
+    Carrier:  {meat:45.619, plant:58.8125, soil:20.4, sand:24.6, honey:10.2, fungi:20}
 };
 
 // ---------- Utility ----------
@@ -108,11 +108,11 @@ function update() {
     const base = costs[antType];
 
     const finalCost = {
-        meat: Math.round(base.meat * qty * (1 - reduction)),
-        plant: Math.round(base.plant * qty * (1 - reduction)),
-        soil: Math.round(base.soil * qty * (1 - reduction)),
-        sand: Math.round(base.sand * qty * (1 - reduction)),
-        honey: Math.round(base.honey * qty * (1 - reduction)),
+        meat: Math.ceil(base.meat * qty * (1 - reduction)),
+        plant: Math.ceil(base.plant * qty * (1 - reduction)),
+        soil: Math.ceil(base.soil * qty * (1 - reduction)),
+        sand: Math.ceil(base.sand * qty * (1 - reduction)),
+        honey: Math.ceil(base.honey * qty * (1 - reduction)),
         fungi: base.fungi * qty
     };
 
